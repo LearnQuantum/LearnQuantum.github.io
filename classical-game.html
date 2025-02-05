@@ -1,0 +1,295 @@
+<title>Classical Game</title>
+<link rel="icon" type="image/x-icon" href="images/Q-icon.png">
+
+<style>
+	table{
+		font-size:13pt;
+		font-name:'Open Sans';
+	}
+	a {
+	  text-decoration: none;
+	  color: #0000ee;
+	}
+</style>
+
+<body style="font-name:'Open Sans';font-size:13pt;">
+
+<div style="margin-left:20px; margin-top:20px;" markdown="1">
+
+<h1 id="classical-game">Classical Game</h1>
+<p><em>Based on the code given in <a href="https://realpython.com/pygame-a-primer/" target="_blank">https://realpython.com/pygame-a-primer/</a></em></p>
+<h2 id="basics">Basics</h2>
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 1.</b> Open a new python file or project</p>
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 2.</b> Import pygame</p>
+<p>We use the following code to install &quot;pygame&quot; if not installed.</p>
+<pre><code><span class="hljs-keyword">try</span>:
+    <span class="hljs-keyword">import</span> pygame
+except:
+    <span class="hljs-keyword">import</span> subprocess, sys
+    subprocess.check_call([sys.executable, <span class="hljs-string">"-m"</span>, <span class="hljs-string">"pip"</span>, <span class="hljs-string">"install"</span>, <span class="hljs-string">"pygame"</span>])
+    <span class="hljs-keyword">import</span> pygame
+</code></pre>
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 3.</b> Initiate the game screen</p>
+<p>Define the screen width and height</p>
+<pre><code><span class="hljs-attr">SCREEN_WIDTH</span> = <span class="hljs-number">800</span>
+<span class="hljs-attr">SCREEN_HEIGHT</span> = <span class="hljs-number">400</span>
+</code></pre><p>Initiate the pygame and define the screen</p>
+<pre><code>pygame.init()
+screen = pygame<span class="hljs-selector-class">.display</span><span class="hljs-selector-class">.set_mode</span>([SCREEN_WIDTH, SCREEN_HEIGHT])
+</code></pre>
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 4.</b> Game loop</p>
+<p>FPS (Frame per second): The number of frames shown in one second. <em>E.g., TV shows/movies -&gt; 24fps, live broadcast -&gt; 30 fps, video games -&gt; 30-120 fps.</em></p>
+<p>We prepare each frame and then it is shown on the screen. </p>
+<p>We use an infinite loop, but we can adjust FPS for our game.</p>
+<p>To exit from the loop, the user can close the window, which is an event that we can check inside the loop.</p>
+<pre><code>clock = pygame.<span class="hljs-built_in">time</span>.Clock() <span class="hljs-comment"># define a clock object to set the FPS later inside the loop</span>
+
+<span class="hljs-built_in">running</span> = True
+<span class="hljs-keyword">while</span> <span class="hljs-built_in">running</span>:
+    <span class="hljs-keyword">for</span> event <span class="hljs-keyword">in</span> pygame.event.<span class="hljs-keyword">get</span>(): <span class="hljs-comment"># check all events one by one since the last frame </span>
+        <span class="hljs-keyword">if</span> event.type == pygame.QUIT: <span class="hljs-comment"># if the window is closed</span>
+            <span class="hljs-built_in">running</span> = False
+    screen.fill((<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)) <span class="hljs-comment"># the screen background color is set to black (Red=0,Green=0,Blue=0)</span>
+    pygame.display.flip() <span class="hljs-comment"># show everything since the last frame</span>
+    clock.tick(<span class="hljs-number">30</span>) <span class="hljs-comment"># set the FPS rate</span>
+</code></pre><p><em>Note that we can specify color with a tuple (Red,Green,Blue), where each entry is an integer between 0 and 255.</em></p>
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="our-photonic-ship">Our photonic ship</h2>
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 5:</b> Define the player as an Sprite object</p>
+<p>By using (extending) an existing object, we can also use their pre-defined properties and methods. </p>
+<p>We use Sprite object for our photonic ship. We define a new class &quot;Player&quot; extending &quot;Sprite&quot;.</p>
+<pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Player</span>(<span class="hljs-title">pygame</span>.<span class="hljs-title">sprite</span>.<span class="hljs-title">Sprite</span>): <span class="hljs-comment"># define this class before the game loop</span></span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(<span class="hljs-keyword">self</span>)</span></span>:
+        <span class="hljs-keyword">super</span>(Player, <span class="hljs-keyword">self</span>).__init_<span class="hljs-number">_</span>() <span class="hljs-comment"># execute the __init__ method of the parent (Sprite object)</span>
+        <span class="hljs-keyword">self</span>.surf = pygame.Surface((<span class="hljs-number">75</span>, <span class="hljs-number">25</span>)) <span class="hljs-comment"># create a surface &lt;- our photonic ship</span>
+        <span class="hljs-keyword">self</span>.surf.fill((<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>)) <span class="hljs-comment"># color of our photonic ship</span>
+        <span class="hljs-keyword">self</span>.rect = <span class="hljs-keyword">self</span>.surf.get_rect() <span class="hljs-comment"># create a variable to access the surface as a rectangle</span>
+
+player = Player() <span class="hljs-comment"># define an instance &lt;-- "player" will be our photonic ship</span>
+</code></pre>
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 6:</b> Show the player on the screen</p>
+<p>We use &quot;blit()&quot; method of &quot;screen&quot;: Block transfer, &quot;blit(surface, position or rectangle)&quot;, the position of rectange is used when a rectange is provided</p>
+<pre><code>    <span class="hljs-keyword">screen.blit(player.surf, </span>player.rect) <span class="hljs-comment"># player is "transferred as a block" on the screen</span>
+</code></pre>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 7:</b> Update the player position with arrows</p>
+<p>We start with importing constants associatied with the key arrows to easily access them later.</p>
+<pre><code><span class="hljs-title">from</span> pygame.locals <span class="hljs-keyword">import</span> (
+    <span class="hljs-type">K_UP</span>,
+    <span class="hljs-type">K_DOWN</span>,
+    <span class="hljs-type">K_LEFT</span>,
+    <span class="hljs-type">K_RIGHT</span>,
+    <span class="hljs-type">K_ESCAPE</span>,
+)
+</code></pre><p>We can directly access all pressed keys by &quot;pygame.key.get_pressed()&quot;.</p>
+<p>We define an &quot;update&quot; function within the &quot;Player()&quot; class taking &quot;pressed_keys&quot; as the input.</p>
+<pre><code>    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span><span class="hljs-params">(<span class="hljs-keyword">self</span>, pressed_keys)</span></span>: <span class="hljs-comment"># we move the rectangular with (x,y)</span>
+        <span class="hljs-keyword">if</span> pressed_keys[K_UP]:
+            <span class="hljs-keyword">self</span>.rect.move_ip(<span class="hljs-number">0</span>, -<span class="hljs-number">5</span>)
+        <span class="hljs-keyword">if</span> pressed_keys[K_DOWN]:
+            <span class="hljs-keyword">self</span>.rect.move_ip(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>)
+        <span class="hljs-keyword">if</span> pressed_keys[K_LEFT]:
+            <span class="hljs-keyword">self</span>.rect.move_ip(-<span class="hljs-number">5</span>, <span class="hljs-number">0</span>)
+        <span class="hljs-keyword">if</span> pressed_keys[K_RIGHT]:
+            <span class="hljs-keyword">self</span>.rect.move_ip(<span class="hljs-number">5</span>, <span class="hljs-number">0</span>)
+</code></pre><p>What if our photonic ship goes beyond the border?</p>
+<pre><code>        # <span class="hljs-type">Keep</span> player on the screen
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>.rect.<span class="hljs-keyword">left</span> &lt; <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">self</span>.rect.<span class="hljs-keyword">left</span> = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>.rect.<span class="hljs-keyword">right</span> &gt; <span class="hljs-type">SCREEN_WIDTH</span>:
+            <span class="hljs-keyword">self</span>.rect.<span class="hljs-keyword">right</span> = <span class="hljs-type">SCREEN_WIDTH</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>.rect.top &lt;= <span class="hljs-number">0</span>:
+            <span class="hljs-keyword">self</span>.rect.top = <span class="hljs-number">0</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>.rect.bottom &gt;= <span class="hljs-type">SCREEN_HEIGHT</span>:
+            <span class="hljs-keyword">self</span>.rect.bottom = <span class="hljs-type">SCREEN_HEIGHT</span>
+</code></pre><p>Now, let&#39;s call &quot;update()&quot; method within the infinite loop: Before &quot;blitting&quot; the player, we will update the player&#39;s position.</p>
+<pre><code>    pressed_keys = pygame.key.get_pressed()
+    <span class="hljs-keyword">if</span> pressed_keys[K_ESCAPE]: running = <span class="hljs-literal">False</span> # let<span class="hljs-symbol">'s</span> <span class="hljs-keyword">exit</span> the game <span class="hljs-keyword">if</span> the player press <span class="hljs-string">"ESC"</span>
+    player.update(pressed_keys)
+</code></pre>
+
+
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="enemies">Enemies</h2>
+
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 8:</b> Creating enemies in certain intervals</p>
+<p>We define a certain time interval to create each enemy randomly on the right side of the screen.</p>
+<p>For this purpose, we will create a new EVENT not listed in the system and call it in every 250 miliseconds. </p>
+<pre><code>CREATING_ENEMY_TIME_INTERVAL = <span class="hljs-number">250</span> #  we can <span class="hljs-keyword">set</span> it <span class="hljs-keyword">to</span> different values <span class="hljs-keyword">if</span> we wish
+ADDENEMY = pygame.USEREVENT + <span class="hljs-number">1</span> # <span class="hljs-keyword">each</span> <span class="hljs-keyword">event</span> <span class="hljs-keyword">is</span> associated <span class="hljs-keyword">with</span> an integer
+pygame.time.set_timer(ADDENEMY, CREATING_ENEMY_TIME_INTERVAL)
+</code></pre><p>Now, we have a new event ADDENEMY, and we will catch it within the event loop of the infinite game loop.</p>
+<pre><code>    <span class="hljs-keyword">for</span> event <span class="hljs-keyword">in</span> pygame.event.get():
+        <span class="hljs-keyword">if</span> event.<span class="hljs-keyword">type</span> == pygame.<span class="hljs-type">QUIT</span>:
+            pygame.quit()
+        <span class="hljs-keyword">elif</span> event.<span class="hljs-keyword">type</span> == <span class="hljs-type">ADDENEMY</span>: <span class="hljs-comment"># we catch the new event here and then we will create a new enemy</span>
+            print(<span class="hljs-string">"We will create a new enemy here but before that we should define an Enemy() class"</span>) <span class="hljs-comment"># we will replace this line in Step 11</span>
+</code></pre>
+
+
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 9.</b> Enemy() class</p>
+<p>Enemies and our photonic ship are basically the same, but their sizes and moves are defined differently.</p>
+<pre><code>import random <span class="hljs-comment"># we use randomness for the position and speed of enemies</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Enemy</span>(<span class="hljs-title">pygame</span>.<span class="hljs-title">sprite</span>.<span class="hljs-title">Sprite</span>):</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(<span class="hljs-keyword">self</span>)</span></span>:
+        <span class="hljs-keyword">super</span>(Enemy, <span class="hljs-keyword">self</span>).__init_<span class="hljs-number">_</span>()
+        <span class="hljs-keyword">self</span>.surf = pygame.Surface((<span class="hljs-number">20</span>, <span class="hljs-number">10</span>)) <span class="hljs-comment"># Enemies are smaller than our photonic ship</span>
+        <span class="hljs-keyword">self</span>.surf.fill((<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>)) <span class="hljs-comment"># the color of enemies - would you like to try different colors here?</span>
+        <span class="hljs-keyword">self</span>.rect = <span class="hljs-keyword">self</span>.surf.get_rect( <span class="hljs-comment"># their positions are random but still they should appear on the right side</span>
+            center=(
+                random.randint(SCREEN_WIDTH + <span class="hljs-number">20</span>, SCREEN_WIDTH + <span class="hljs-number">100</span>), <span class="hljs-comment"># position of x</span>
+                random.randint(<span class="hljs-number">0</span>, SCREEN_HEIGHT), <span class="hljs-comment"># position of y</span>
+            )
+        )
+        <span class="hljs-keyword">self</span>.speed = random.randint(<span class="hljs-number">5</span>, <span class="hljs-number">20</span>) <span class="hljs-comment"># we assign a random speed - how many pixel to move to the left in each frame</span>
+</code></pre><p>There should be an update method for enemies as well</p>
+<pre><code>    def update(<span class="hljs-keyword">self</span>):
+        <span class="hljs-keyword">self</span>.rect.move_ip(-<span class="hljs-keyword">self</span>.speed, <span class="hljs-number">0</span>)
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">self</span>.rect.right &lt; <span class="hljs-number">0</span>: # <span class="hljs-keyword">remove</span> any enemy moving <span class="hljs-keyword">out</span> side <span class="hljs-keyword">of</span> the screen
+            <span class="hljs-keyword">self</span>.kill() # a nice <span class="hljs-function"><span class="hljs-keyword">method</span> <span class="hljs-title">inherited</span> <span class="hljs-title">from</span> <span class="hljs-title">Sprite</span><span class="hljs-params">()</span></span>
+</code></pre>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 10.</b> Collection of enemies and the player(s)</p>
+<p>To make the things easier, we use sprite groups</p>
+<pre><code><span class="hljs-attr">enemies</span> = pygame.sprite.Group() <span class="hljs-comment"># keep all enemies - the enemies will be added in the game infinite loop</span>
+<span class="hljs-attr">all_sprites</span> = pygame.sprite.Group() <span class="hljs-comment"># keep all enemies and player(s)</span>
+all_sprites.add(player) <span class="hljs-comment"># add the player here</span>
+</code></pre>
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 11.</b> Creating and displaying enemies</p>
+<pre><code>        elif event.type == ADDENEMY:  <span class="hljs-type"></span># we <span class="hljs-keyword">catch</span> the <span class="hljs-keyword">new</span> <span class="hljs-type">event</span> <span class="hljs-keyword">here</span> and then we will create a <span class="hljs-keyword">new</span> <span class="hljs-type">enemy</span>
+            <span class="hljs-keyword">new</span><span class="hljs-type">_enemy</span> = Enemy()
+            enemies.add(<span class="hljs-keyword">new</span><span class="hljs-type">_enemy</span>)  <span class="hljs-meta"># add the new enemy</span>
+            all_sprites.add(<span class="hljs-keyword">new</span><span class="hljs-type">_enemy</span>)  <span class="hljs-meta"># add the new enemy</span>
+</code></pre><p>We can call &quot;update()&quot; for all enemies at once, just before "player.update()"</p>
+<pre><code>    enemies.update() <span class="hljs-comment"># a nice property of sprite groups</span>
+</code></pre><p>By using &quot;all_sprites&quot;, we can &quot;blitting&quot; all enemies and the player(s). 
+We should remove the previous &quot;blitting&quot; code for the player</p>
+<pre><code>    <span class="hljs-keyword">for</span> <span class="hljs-keyword">entity</span> <span class="hljs-keyword">in</span> all_sprites:
+        screen.blit(<span class="hljs-keyword">entity</span>.surf, <span class="hljs-keyword">entity</span>.rect)
+</code></pre><p><em>In short, we update the player and the enemies, and then &quot;blitting&quot; all of them on the screen.</em></p>
+
+
+
+
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="game-over">Game Over</h2>
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 12.</b> Collision detection</p>
+<p>Thanks to Sprite and Sprite groups. We can detect if any enemy hits our photonic ship by using a single line of code.</p>
+<pre><code>    <span class="hljs-keyword">if</span> pygame.sprite.spritecollideany(player, enemies): # check <span class="hljs-keyword">if</span> <span class="hljs-string">"player"</span> <span class="hljs-keyword">is</span> hit by any <span class="hljs-keyword">entity</span> <span class="hljs-keyword">in</span> the <span class="hljs-string">"enemies"</span> <span class="hljs-keyword">group</span>
+        # <span class="hljs-keyword">if</span> so: <span class="hljs-keyword">then</span> remove the player <span class="hljs-keyword">and</span> stop the infinite <span class="hljs-keyword">loop</span>
+        player.kill()
+        running = <span class="hljs-literal">False</span>
+</code></pre>
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<p><b>Step 13.</b> Game Over</p>
+<p>Let&#39;s write a game over message before quitting the game. </p>
+<p>This message can stay for example 2 seconds before the exiting the game. So, we define a variable &quot;there_is_message&quot; to set &quot;True&quot; when we have some text to show</p>
+<pre><code><span class="hljs-attr">there_is_message</span> = <span class="hljs-literal">False # define this line just before the game loop</span>
+</code></pre><p>Here is a  message to appear on the screen, when there is a hit:</p>
+<pre><code>        my_font = pygame.font.SysFont(<span class="hljs-string">'Comic Sans MS'</span>, <span class="hljs-number">28</span>) <span class="hljs-comment"># create a font object</span>
+        <span class="hljs-comment"># we create a text surface to blit on the screen</span>
+        text_surface = my_font.render(<span class="hljs-string">"Game Over :( "</span>, False, (<span class="hljs-number">255</span>,<span class="hljs-number">255</span>,<span class="hljs-number">0</span>),(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>)) <span class="hljs-comment"># message / anti-aliasing effect / text color / background color</span>
+        <span class="hljs-keyword">screen.blit(text_surface, </span>(<span class="hljs-keyword">SCREEN_WIDTH/8, </span><span class="hljs-keyword">SCREEN_HEIGHT/2-text_surface.get_height()/2)) </span><span class="hljs-comment"># blit the text on the screen with the specified position</span>
+        there_is_message = True
+</code></pre><p>Put a delay before leaving the infinite loop.</p>
+<p>We import &quot;time&quot; library.</p>
+<pre><code><span class="hljs-keyword">import</span> <span class="hljs-built_in">time</span>
+</code></pre><p>We use &quot;sleep()&quot; method of &quot;time&quot;, immedeately after the flipping.</p>
+<pre><code>    <span class="hljs-keyword">if</span> there_is_message: time.<span class="hljs-built-in">sleep</span>(<span class="hljs-number">2</span>) # <span class="hljs-built-in">sleep</span> <span class="hljs-keyword">for</span> <span class="hljs-number">2</span> seconds
+</code></pre>
+
+
+
+
+
+
+<p style="height:150px;">&nbsp;</p>
+</div>
