@@ -1,0 +1,120 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Classical Ship</title>
+	<link rel="icon" type="image/x-icon" href="../../images/Q-icon.png">
+    <script src="phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0px;
+			font-name:'Open Sans';
+			font-size:13pt;
+			text-align:center;
+        }
+		table{
+			font-size:13pt;
+			font-name:'Open Sans';
+		}
+		a {
+		  text-decoration: none;
+		  color: #0000ee;
+		}
+    </style>
+</head>
+<body>
+
+<h1>Play with Classical Ship</h1>
+
+<script type="text/javascript">
+
+	let config = {
+		type: Phaser.AUTO,
+		width: 800,
+		height: 320,
+		backgroundColor: '#000000',
+		physics: {
+			default: 'arcade',
+			arcade: {
+				gravity: { y: 0 },
+				debug: false
+			}
+		},
+		scene: { preload: preload, create: create,update: update }
+	};
+
+	let game = new Phaser.Game(config);
+	
+	const shipWidth = 60, shipHeigth=20,shipColor=0xaaff00,shipVelocity=150;
+	const enemyWidth = 20; enemyHeigth=10, enemyColor=0xff0000;
+	const enemySpeedMin=150, enemySpeedMax=400;
+	
+	let ship, enemies, cursors;
+	let	running = true;
+	
+	function out(inputStr) { console.log(inputStr); }
+	
+	function preload () { }
+	
+	function create () {
+		ship = this.add.rectangle(shipWidth/2, shipHeigth/2, shipWidth, shipHeigth, shipColor);
+		this.physics.add.existing(ship);
+		ship.body.setCollideWorldBounds(true);
+		enemies = this.physics.add.group();
+		this.time.addEvent({ delay: 250, callback: createEnemy, callbackScope: this, loop: true });
+		this.physics.add.overlap(ship, enemies, handleCollision, null, this);
+		cursors = this.input.keyboard.createCursorKeys();
+	}
+	
+	function update (){
+		if (running==true) {
+			updateShip();
+			updateEnemies();
+		}
+	}
+	
+	function updateShip() {
+		ship.body.setVelocity(0);
+		if (cursors.left.isDown) {
+			ship.body.setVelocityX(-shipVelocity);
+		} else if (cursors.right.isDown) {
+			ship.body.setVelocityX(shipVelocity);
+		}
+
+		if (cursors.up.isDown) {
+			ship.body.setVelocityY(-shipVelocity);
+		} else if (cursors.down.isDown) {
+			ship.body.setVelocityY(shipVelocity);
+		}		
+	}
+	function createEnemy() {
+		if (running==false) return false;
+		let speed = Phaser.Math.Between(enemySpeedMin, enemySpeedMax); // Random speed
+		let enemy = this.add.rectangle(this.sys.game.canvas.width+Phaser.Math.Between(0, 100), Phaser.Math.Between(0, this.sys.game.canvas.height),enemyWidth, enemyHeigth, enemyColor);
+		this.physics.add.existing(enemy);
+		//enemy.body.setVelocityX(-speed);
+		enemy.speed = -speed;
+		enemies.add(enemy);		
+	}
+	function updateEnemies() {
+		if (running==false) return false;
+		let enemyList = enemies.getChildren(); // Get an array of active enemies
+		for (let i = 0; i < enemyList.length; i++) {
+			let enemy = enemyList[i];
+			enemy.body.setVelocityX(enemy.speed);
+			if (enemy.x < -50) { // Check if the enemy has moved off-screen
+				enemies.remove(enemy, true, true); // Remove from group and destroy
+			}
+		}
+	}
+	function handleCollision() {
+		running = false
+		this.add.text(250,100,"Game Over!",{fontSize: '48px', fontStyle: 'bold', fill: '#FF0033'})
+		this.scene.pause();
+	}
+</script>
+
+<p> <a href="javascript:window.location.reload()" ><b>Restart the game</b></a> </p>
+
+</body>
+</html>
