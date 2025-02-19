@@ -1,0 +1,237 @@
+<title>Quantum Game</title>
+<link rel="icon" type="image/x-icon" href="../images/Q-icon.png">
+
+<style>
+	table{
+		font-size:13pt;
+		font-name:'Open Sans';
+	}
+	a {
+	  text-decoration: none;
+	  color: #0000ee;
+	}
+	.hint {
+		width: 800px;
+		padding: 15px;
+		background-color: #f9f9f4;
+		border-radius: 10px;
+		line-height:24pt;
+	}
+	.left-container {
+		width: 800px;
+		padding: 15px;
+		background-color: #eeeeee;
+		border-radius: 10px;
+	}
+	.left-container p {
+		text-align: left;
+		line-height:24pt;
+	}
+	.space {
+		font-size:20pt;
+	}
+</style>
+
+<body style="font-name:'Open Sans';font-size:13pt;">
+
+<div style="margin-left:20px; margin-top:20px;" markdown="1">
+
+
+<h1 id="base-quantum-game">Quantum Game: Hands-on Activity</h1>
+
+<p> We will extend the classical game by introducing <b>quantum superposition</b>, creating a new version called <b>Photonic Ship</b>.</p>
+<p> 💾 <b>Save your classical game code</b>—you’ll need it for reference later. </p>
+<p> 🚀 You’ll build your <b>Photonic Ship</b> step by step through <b>eight tasks</b>. </p>
+<p> 🎮 Each task includes a <b>playable version</b> in your browser to test your progress. </p>
+
+
+
+<br>
+<h2>Task 1 "Two screens"</h2>
+<div class="left-container">
+ <p> 
+	• Double the height and draw a line in the middle. <br>
+	• Now, we have two screens: The upper (lower) screen will represent state |0> (|1>).
+ </p> 
+ <center><a href="games/photonic-ship-task1.html" target="_blank">Try Task 1 Game Version </a></center>
+</div>
+<br>
+<div class="hint">
+💡 drawing a line with a specified color and starting & ending coordinates, from (x1,y1) to (x2,y2)
+ <br>
+ <code>pygame.draw.line(screen, (R, G, B), (x1, y1), (x2, y2)) </code>
+</div>
+
+
+
+<br>
+<h2>Task 2 "X gate"</h2>
+<div class="left-container">
+ <p> 
+	• When pressing key "X", our ship should switch its screen (in the same position).
+	<br><font class="space"></font>
+	• Make sure that our ship cannot cross the middle line.
+</p> 
+ <center><a href="games/photonic-ship-task2.html" target="_blank">Try Task 2 Game Version </a></center>
+</div>
+<br>
+<div class="hint">
+💡 The following properties can be read and set:
+ <br>
+ <code> ship.rect.left <br> ship.rect.top </code>
+</div>
+<br>
+<div class="hint">
+💡 Similar to importing "K_UP, K_DOWN, K_LEFT,...", we can import and use "K_x".
+</div>
+
+
+<br>
+<h2>Task 3 "Display state"</h2>
+<div class="left-container">
+ <p> 
+	• When in the upper screen, the state of our ship is "|0>".
+	<br><font class="space"></font>
+	• When in the lower screen, the state of our ship is "|1>".
+	<br><font class="space"></font>
+	• Display the state information on the top-right corner.
+</p> 
+ <center><a href="games/photonic-ship-task3.html" target="_blank">Try Task 3 Game Version </a></center>
+</div>
+<br>
+<div class="hint">
+💡 Define a variable <code>state</code>, and update it whenever the state is changed.
+</div>
+<br>
+<div class="hint">
+💡 Check how to display "Game Over!". This time we show the state info in each frame without any delay.
+</div>
+
+
+<br>
+<h2>Task 4 "Hadamard"</h2>
+<div class="left-container">
+ <p> 
+	• Apply Hadamard when pressing key "H".
+	<br><font class="space"></font>
+	• If in state |0> or |1>, the new state is |+> or |->, respectively.
+	<br><font class="space"></font>
+	• When entering |+> or |->, create a copy of ship and place it on the other screen.
+	<br><font class="space"></font>
+	• When in |+> or |->, our photonic ship is in superposition. We call it "quantum mode".
+	<br><font class="space"></font>
+	• When in quantum mode, make sure that the ships do not move.
+	<br><font class="space"></font>
+	• When in |+> or |-> and press "H", the new state is |0> or |1>, respectively. The mode is "classic".
+</p> 
+ <center><a href="games/photonic-ship-task4.html" target="_blank">Try Task 4 Game Version </a></center>
+</div>
+<br>
+<div class="hint">
+💡 Define a variable <code>twinship</code> for the second ship. Check the code for creating the first ship.
+</div>
+<br>
+<div class="hint">
+💡 Check <code>state</code> before updating the ship position.
+</div>
+
+
+<br>
+<h2>Task 5 "Quantum Mode"</h2>
+<div class="left-container">
+ <p> 
+	• Make sure that the state info is displayed correctly on the top-right corner. 	
+	<br><font class="space"></font>
+	• When in state |+> or |->, the user can move only the enemies up and down.
+	<br><font class="space"></font>
+	• When pressing arrow keys "UP" or "DOWN", move every enemy accordingly.
+	<br><font class="space"></font>
+	• Enemies can cross the middle line, and when dropping from the top (resp., bottom), they appear again from the bottom (resp., top).
+	<br><font class="space"></font>
+	• Enemies should still move automatically to the left.
+</p> 
+ <center><a href="games/photonic-ship-task5.html" target="_blank">Try Task 5 Game Version </a></center>
+</div>
+<br>
+<div class="hint">
+💡 Each enemy has <code> enemy.rect.top </code> for its vertical (y) position. Check the code for updating the ship.
+</div>
+
+
+<br>
+<h2>Task 6 "Measurement"</h2>
+<div class="left-container">
+ <p> 
+	• When in a superposition (|+> or |->), what happens if one of the ships is hit by an enemy?
+	<br><font class="space"></font>
+	• We measure our system, and our ship collopses into the up (down) screen if |0> (|1>) is observed.
+	<br><font class="space"></font>
+	• Implement this measurement and update the game accordingly.
+	<br><font class="space"></font>
+	• After measurement, decide if the ship is hit (destroyed) or survived.
+	<br><font class="space"></font>
+	• Display an informative message about the measurement outcome and the status of ship.
+</p> 
+ <center><a href="games/photonic-ship-task6.html" target="_blank">Try Task 6 Game Version </a></center>
+</div>
+<br>
+<div class="hint">
+💡 Collision check should be made for both <code>ship</code> and <code>twinship</code>.
+</div>
+<br>
+<div class="hint">
+💡 Randomly pick an integer from 1 to 100. The state 0 (1) is observed if this integer is even (odd).
+</div>
+<br>
+<div class="hint">
+💡 When collopsing, it is easier to remove <code>twinship</code>, but then <code>ship</code> should appear in the correct screen.
+</div>
+<br>
+<div class="hint">
+💡 Use <code>state</code> to determine the correct screen for <code>ship</code>.
+</div>
+<br>
+<div class="hint">
+💡 Collision check can be made once more for <code>ship</code> in the same frame after collapsing and placing the correct screen.
+</div>
+
+
+<br>
+<h2>Task 7 "X and Z gates"</h2>
+<div class="left-container">
+ <p> 
+	• When in a superposition (|+> or |->), make sure that pressing X does not change the state and so the game.
+	<br><font class="space"></font>
+	• When in (|0> or |1>), pressing Z does not change the state and so the game.
+	<br><font class="space"></font>
+	• But, when in a superposition (|+> or |->), pressing Z should switch |+> to |-> and vice versa. 
+</p> 
+ <center><a href="games/photonic-ship-task7.html" target="_blank">Try Task 7 Game Version </a></center>
+</div>
+
+
+
+<br>
+<h2>Task 8 "Apply quantum gates randomly"</h2>
+<div class="left-container">
+ <p> 
+	• Let the system applies the quantum gates (X, H, Z) randomly..
+	<br><font class="space"></font>
+	• For example, in each frame, pick a random integer between 0 and 300.
+	<br><font class="space"></font>
+	&nbsp;&nbsp;&nbsp;&nbsp;• If it is 100 or 200, applies X.
+	<br><font class="space"></font>
+	&nbsp;&nbsp;&nbsp;&nbsp;• If it is 50 or 250, applies Z.
+	<br><font class="space"></font>
+	&nbsp;&nbsp;&nbsp;&nbsp;• If it is 150, applies H.
+	<br><font class="space"></font>
+	• Apply X only in the classic mode, and Apply Z only in the quantum mode.
+	<br><font class="space"></font>
+	• Play with the randomization parameters to make it more comfortable for yourself.
+</p> 
+ <center><a href="games/photonic-ship-task8.html" target="_blank">Try Task 8 Game Version </a></center>
+</div>
+
+
+<p style="height:150px;">&nbsp;</p>
+</div>

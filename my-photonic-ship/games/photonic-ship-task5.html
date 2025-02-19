@@ -1,0 +1,216 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Photonic Ship - Task 5</title>
+	<link rel="icon" type="image/x-icon" href="../../images/Q-icon.png">
+    <script src="phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 5px;
+			font-name:'Open Sans';
+			font-size:13pt;
+			text-align:center;
+        }
+		.centered-container {
+            width: 700px;; /* Adjust width as needed */
+            margin: 0 auto; /* Centers the div horizontally */
+            padding: 15px;
+            background-color: #eeeeee;
+            border-radius: 10px;
+        }
+		.centered-container p {
+            text-align: left;
+        }
+		.space {
+			font-size:20pt;
+		}
+	</style>
+</head>
+<body>
+
+<h1>Photonic Ship - Task 5 "Quantum Mode"</h1>
+
+<div class="centered-container">
+ <p> 
+	• Make sure that the state info is displayed correctly on the top-right corner. 	
+	<br><font class="space"></font>
+	• When in state |+> or |->, the user can move only the enemies up and down.
+	<br><font class="space"></font>
+	• When pressing arrow keys "UP" or "DOWN", move every enemy accordingly.
+	<br><font class="space"></font>
+	• Enemies can cross the middle line, and when dropping from the top (resp., bottom), they appear again from the bottom (resp., top).
+	<br><font class="space"></font>
+	• Enemies should still move automatically to the left.
+</p> 
+</div>
+<br>
+<div id="game-container"></div> <!-- Phaser will go here -->
+
+<p> <a href="#" id="restart-link"><b>Restart the game</b></a> </p>
+
+<script type="text/javascript">
+
+	let config = {
+		parent: 'game-container', // Attach game to this div
+		type: Phaser.AUTO,
+		width: 800,
+		height: 640,
+		backgroundColor: '#000000',
+		physics: {
+			default: 'arcade',
+			arcade: {
+				gravity: { y: 0 },
+				debug: false
+			}
+		},
+		scene: { preload: preload, create: create,update: update }
+	};
+
+	let game = new Phaser.Game(config);	
+	let screenWidth, screenHeight,refthis;
+	
+	const shipWidth = 60, shipHeight=20,shipColor=0xaaff00,shipVelocity=150;
+	const enemyWidth = 20; enemyHeigth=10, enemyColor=0xff0000;
+	const enemySpeedMin=150, enemySpeedMax=400;
+	
+	let ship, enemies, cursors;
+	let	running = true;
+	
+	let state,text_state, twinship;
+	
+	function out(inputStr) { console.log(inputStr); }
+	
+	function preload () { }
+	
+	function create () {
+	
+		refthis = this;
+		state = "0"
+		
+		screenWidth = this.sys.game.canvas.width;
+		screenHeight = this.sys.game.canvas.height;
+		
+		this.add.rectangle(screenWidth/2, screenHeight/2, screenWidth, 4, 0x0000ff);
+		
+		ship = this.add.rectangle(shipWidth/2, shipHeight/2, shipWidth, shipHeight, shipColor);
+		this.physics.add.existing(ship);
+		ship.body.setCollideWorldBounds(true);
+		enemies = this.physics.add.group();
+		this.time.addEvent({ delay: 250, callback: createEnemy, callbackScope: this, loop: true });
+		this.physics.add.overlap(ship, enemies, handleCollision, null, this);
+		cursors = this.input.keyboard.createCursorKeys();
+		
+		document.getElementById('restart-link').addEventListener('click', (event) => {
+			event.preventDefault(); // Prevent default link behavior
+			running = true;
+			this.scene.restart(); // Restart the current scene
+		});
+		
+		this.input.keyboard.on('keydown-X', () => { keydownX(); });
+		this.input.keyboard.on('keydown-H', () => { keydownH(); });
+		
+		textState = this.add.text(screenWidth-110,5,"State: |"+state+">")
+	}
+	
+	function update (){
+		if (running==true) {
+			updateShip();
+			updateEnemies();
+		}
+	}
+	
+	function updateShip() {
+		if (state=="+" || state=="-") 
+			return "quantum mode"
+		ship.body.setVelocity(0);
+		if (cursors.left.isDown) {
+			ship.body.setVelocityX(-shipVelocity);
+		} else if (cursors.right.isDown) {
+			ship.body.setVelocityX(shipVelocity);
+		}
+
+		if (cursors.up.isDown) {
+			ship.body.setVelocityY(-shipVelocity);
+		} else if (cursors.down.isDown) {
+			ship.body.setVelocityY(shipVelocity);
+		}
+
+		if (state=="0" && ship.y > screenHeight/2 - shipHeight/2) ship.y = screenHeight/2 - shipHeight/2
+		if (state=="1" && ship.y < screenHeight/2 + shipHeight/2) ship.y = screenHeight/2 + shipHeight/2
+	}
+	function createEnemy() {
+		if (running==false) return false;
+		let speed = Phaser.Math.Between(enemySpeedMin, enemySpeedMax); // Random speed
+		let enemy = this.add.rectangle(screenWidth+Phaser.Math.Between(0, 100), Phaser.Math.Between(0, screenHeight),enemyWidth, enemyHeigth, enemyColor);
+		this.physics.add.existing(enemy);
+		//enemy.body.setVelocityX(-speed);
+		enemy.speed = -speed;
+		enemies.add(enemy);		
+	}
+	function updateEnemies() {
+		if (running==false) return false;
+		let enemyList = enemies.getChildren(); // Get an array of active enemies
+		for (let i = 0; i < enemyList.length; i++) {
+			let enemy = enemyList[i];
+			enemy.body.setVelocity(0);
+			enemy.body.setVelocityX(enemy.speed);
+			if (enemy.x < -50) { // Check if the enemy has moved off-screen
+				enemies.remove(enemy, true, true); // Remove from group and destroy
+			}
+			else {
+				if (state == "+" || state == "-") {
+					if (cursors.up.isDown) enemy.body.setVelocityY(-shipVelocity);
+					else if (cursors.down.isDown) enemy.body.setVelocityY(shipVelocity);
+					
+					if (enemy.y<0) enemy.y += screenHeight
+					if (enemy.y>screenHeight) enemy.y-= screenHeight
+				}
+			}
+		}
+	}
+	function handleCollision() {
+		running = false
+		this.add.text(screenWidth/3,screenHeight/3,"Game Over!",{fontSize: '48px', fontStyle: 'bold', fill: '#FF0033'})
+		this.scene.pause();
+	}
+	
+	function keydownX() {
+		if (state=="0" || state=="1") {
+			if (ship.y < screenHeight/2-shipHeight/2) ship.y+=screenHeight/2;
+			else ship.y-=screenHeight/2;
+			state = ""+(1-1*state)
+		}
+		textState.text="State: |"+state+">";
+	}
+	
+	function keydownH() {
+		if (state=="0" || state=="1") {
+			createTwinShip();
+			if (ship.y < screenHeight/2) twinship.y+=screenHeight/2;
+			if (ship.y > screenHeight/2) twinship.y-=screenHeight/2;
+			if (state=="0") state="+";
+			else state="-";
+		}
+		else {
+			twinship.destroy();
+			if (state=="+") {
+				if (ship.y>screenHeight/2) ship.y -=screenHeight/2;
+				state = "0"
+			}
+			else if (state=="-") {
+				if (ship.y<screenHeight/2) ship.y +=screenHeight/2;
+				state = "1"
+			}
+		}
+		textState.text="State: |"+state+">";
+	}
+	function createTwinShip() {
+		twinship = refthis.add.rectangle(ship.x, ship.y, shipWidth, shipHeight, shipColor);
+		refthis.physics.add.existing(twinship);
+		twinship.body.setCollideWorldBounds(true);
+	}
+</script>
+
+</body>
+</html>

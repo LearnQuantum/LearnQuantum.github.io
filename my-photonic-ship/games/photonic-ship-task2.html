@@ -1,0 +1,166 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Photonic Ship - Task 2</title>
+	<link rel="icon" type="image/x-icon" href="../../images/Q-icon.png">
+    <script src="phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 5px;
+			font-name:'Open Sans';
+			font-size:13pt;
+			text-align:center;
+        }
+		.centered-container {
+            width: 700px;; /* Adjust width as needed */
+            margin: 0 auto; /* Centers the div horizontally */
+            padding: 15px;
+            background-color: #eeeeee;
+            border-radius: 10px;
+        }
+		.centered-container p {
+            text-align: left;
+        }
+		.space {
+			font-size:20pt;
+		}
+	</style>
+</head>
+<body>
+
+<h1>Photonic Ship - Task 2 "X gate"</h1>
+
+<div class="centered-container">
+ <p> 
+	• When pressing key "X", our ship should switch its screen (in the same position).
+	<br><font class="space"></font>
+	• Make sure that our ship cannot cross the middle line.
+</p> 
+</div>
+<br>
+<div id="game-container"></div> <!-- Phaser will go here -->
+
+<p> <a href="#" id="restart-link"><b>Restart the game</b></a> </p>
+
+<script type="text/javascript">
+
+	let config = {
+		parent: 'game-container', // Attach game to this div
+		type: Phaser.AUTO,
+		width: 800,
+		height: 640,
+		backgroundColor: '#000000',
+		physics: {
+			default: 'arcade',
+			arcade: {
+				gravity: { y: 0 },
+				debug: false
+			}
+		},
+		scene: { preload: preload, create: create,update: update }
+	};
+
+	let game = new Phaser.Game(config);	
+	let screenWidth, screenHeight;
+	
+	const shipWidth = 60, shipHeigth=20,shipColor=0xaaff00,shipVelocity=150;
+	const enemyWidth = 20; enemyHeigth=10, enemyColor=0xff0000;
+	const enemySpeedMin=150, enemySpeedMax=400;
+	
+	let ship, enemies, cursors;
+	let	running = true;
+	
+	let state="0";
+	
+	function out(inputStr) { console.log(inputStr); }
+	
+	function preload () { }
+	
+	function create () {
+		
+		screenWidth = this.sys.game.canvas.width;
+		screenHeight = this.sys.game.canvas.height;
+		
+		this.add.rectangle(screenWidth/2, screenHeight/2, screenWidth, 4, 0x0000ff);
+		
+		ship = this.add.rectangle(shipWidth/2, shipHeigth/2, shipWidth, shipHeigth, shipColor);
+		this.physics.add.existing(ship);
+		ship.body.setCollideWorldBounds(true);
+		enemies = this.physics.add.group();
+		this.time.addEvent({ delay: 250, callback: createEnemy, callbackScope: this, loop: true });
+		this.physics.add.overlap(ship, enemies, handleCollision, null, this);
+		cursors = this.input.keyboard.createCursorKeys();
+		
+		document.getElementById('restart-link').addEventListener('click', (event) => {
+			event.preventDefault(); // Prevent default link behavior
+			running = true;
+			this.scene.restart(); // Restart the current scene
+		});
+		
+		this.input.keyboard.on('keydown-X', () => { keydownX(); });
+	}
+	
+	function update (){
+		if (running==true) {
+			updateShip();
+			updateEnemies();
+		}
+	}
+	
+	function updateShip() {
+		if (state=="+" || state=="-") 
+			return "quantum mode"
+		ship.body.setVelocity(0);
+		if (cursors.left.isDown) {
+			ship.body.setVelocityX(-shipVelocity);
+		} else if (cursors.right.isDown) {
+			ship.body.setVelocityX(shipVelocity);
+		}
+
+		if (cursors.up.isDown) {
+			ship.body.setVelocityY(-shipVelocity);
+		} else if (cursors.down.isDown) {
+			ship.body.setVelocityY(shipVelocity);
+		}
+
+		if (state=="0" && ship.y > screenHeight/2 - shipHeigth/2) ship.y = screenHeight/2 - shipHeigth/2
+		if (state=="1" && ship.y < screenHeight/2 + shipHeigth/2) ship.y = screenHeight/2 + shipHeigth/2
+	}
+	function createEnemy() {
+		if (running==false) return false;
+		let speed = Phaser.Math.Between(enemySpeedMin, enemySpeedMax); // Random speed
+		let enemy = this.add.rectangle(screenWidth+Phaser.Math.Between(0, 100), Phaser.Math.Between(0, screenHeight),enemyWidth, enemyHeigth, enemyColor);
+		this.physics.add.existing(enemy);
+		//enemy.body.setVelocityX(-speed);
+		enemy.speed = -speed;
+		enemies.add(enemy);		
+	}
+	function updateEnemies() {
+		if (running==false) return false;
+		let enemyList = enemies.getChildren(); // Get an array of active enemies
+		for (let i = 0; i < enemyList.length; i++) {
+			let enemy = enemyList[i];
+			enemy.body.setVelocityX(enemy.speed);
+			if (enemy.x < -50) { // Check if the enemy has moved off-screen
+				enemies.remove(enemy, true, true); // Remove from group and destroy
+			}
+		}
+	}
+	function handleCollision() {
+		running = false
+		this.add.text(screenWidth/3,screenHeight/3,"Game Over!",{fontSize: '48px', fontStyle: 'bold', fill: '#FF0033'})
+		this.scene.pause();
+	}
+	
+	function keydownX() {
+		if (state=="0" || state=="1") {
+			if (ship.y < screenHeight/2-shipHeigth/2) ship.y+=screenHeight/2;
+			else ship.y-=screenHeight/2;
+			state = ""+(1-1*state)
+		}
+	}
+</script>
+
+</body>
+</html>
