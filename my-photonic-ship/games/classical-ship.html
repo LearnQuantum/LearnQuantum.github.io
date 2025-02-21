@@ -50,62 +50,97 @@
 <p> <a href="#" id="restart-link"><b>Restart the game</b></a> </p>
 
 <div class="centered-container">
-	<p style="font-size:15pt;"> <b>Lets discuss about this game and its design details</b></p>
-	<p>(10-15 minutes)</p>
+	<p style="font-size:15pt;"> <b>Game Discussion & Design Details</b></p>
+	<p>🕹 Discussion Time: 10-15 minutes</p>
 	
-	<p class="clickable" onclick="toggleDetails('what-to-see')">1) What kind of objects are you seeing? Their properties? </p>
-	<p style="display:none" id="what-to-see">
-		There is one big "green" and several small "red" enemies.
-		<br><font class="space"></font> - The game background is black.
-		<br><font class="space"></font> - The ship and enemies are rectangles.
-		<br><font class="space"></font> - We can specify their size (dimensions): "width" and "height".
-		<br><font class="space"></font> - We can specify their backround color.
-		<br><font class="space"></font> - The ship starts from the top-left. We can specify its horizontal (x) and vertical (y) positions.
-		<br><font class="space"></font> - The enemies appear from the right, and their starting positions (x,y) are random.
-		<br><font class="space"></font> - The ship is moved by arrow keys. The ship cannot move our the game screen.
-		<br><font class="space"></font> - The enemies are automically move to the left, and each has a diffent speed (random).
-		<br><font class="space"></font> - Enemies disappear from the left.	
-		<br><font class="space"></font> - When the ship is hit by an enemy, the game is over.
+	<p class="clickable" onclick="toggleDetails('game-elements')"> 1️⃣ Observing the Game Elements: 
+		<font style="color:black;">What objects do you see? What are their properties?</font> </p>
+	<p style="display:none" id="ggame-elements">
+		<ul style="display:none;line-height:24pt;text-align:left;" id="game-elements">
+			<li> The game features <b>one large green object (the player’s ship)</b> and <b>multiple small red enemies</b>. </li>
+			<li> <b>Background:</b> Black. </li>
+			<li> <b>Shapes:</b> The ship and enemies are <b>rectangles</b>.</li>
+			<li> <b>Properties:</b>
+				<ul>
+					<li> Each object has <b>dimensions</b> (width, height).</li>
+					<li> Each object has a <b>background color</b>.</li>
+					<li> The <b>ship starts at the top-left</b> and has defined <b>x (horizontal) and y (vertical) positions</b>.</li>
+					<li> <b>Enemies spawn on the right</b> with <b>random starting positions (x, y)</b>.</li>
+				</ul>
+			</li>			
+		</ul>
 	</p>
-	
-	<p class="clickable" onclick="toggleDetails('pygame')">2) We develop this game by using "pygame" library in Python. </p>
-	<p style="display:none" id="pygame">
-		The library "pygame" makes game design easy. 
-		<br><font class="space"></font>
-		I coded this game in Python with 100 lines of codes.
-		<br><font class="space"></font>
-		We develop this game together step by step.
-		<br><font class="space"></font>
-		The library "pygame" has a game-loop. 
-		<br><font class="space"></font> - We prepare a frame and then show it on the screen.
-		<br><font class="space"></font> - We fix the frame rate (max # of frame per soconds).
-		<br><font class="space"></font> - We check the events (key pressed) and then update the ship's position in each frame.
-		<br><font class="space"></font> - We update the enemies' positions in each frame.
-		<br><font class="space"></font> - We use collision detection between the ship and the enemies in each frame.
-		<br><font class="space"></font> - We terminate the game if there is any collision or the user presses ESC.
-	</p>
-	
-	<p class="clickable" onclick="toggleDetails('structure')">3) The structure of the program. </p>
-	<p style="display:none" id="structure">
-	<code>
-	import libraries <br><br>
-	define variables <br><br>
-	initiate the pygame <br><br>
-	create the ship <br><br>
-	function updatePlayer()<br><br>
-	function createEnemy()<br><br>
-	function updateEnemies()<br><br>
-	game-loop<br><br>
-	&nbsp;&nbsp; - each iteration is a frame <br><br>
-	&nbsp;&nbsp; - check the events and pressed keys <br><br>
-	&nbsp;&nbsp; - create a new enemy <br><br>
-	&nbsp;&nbsp; - set the screen background color <br><br>
-	&nbsp;&nbsp; - update the ship and enemies <br><br>
-	&nbsp;&nbsp; - collision detection <br><br>
-	&nbsp;&nbsp; - transfer everything on the screen <br><br>
-	&nbsp;&nbsp; - show the frame <br>
-	</code>
-	</p>
+	<p class="clickable" onclick="toggleDetails('game-mechanics')"> 2️⃣ Game Mechanics </p>
+	<ul style="display:none;line-height:24pt;text-align:left;" id="game-mechanics">
+		<li> <b>Ship Movement:</b>
+			<ul>
+				<li> The ship moves using <b>arrow keys</b>.</li>
+				<li> It <b>cannot move outside</b> the game screen. </li>
+			</ul>
+		</li>
+		<li> <b>Enemy Behavior:</b>
+			<ul>
+				<li> Enemies <b>automatically move left</b> at <b>random speeds</b>.</li>
+				<li> They <b>disappear</b> when they reach the left edge. </li>
+			</ul>
+		</li>
+		<li><b>Game Over Condition:</b>
+			<ul>
+				<li> If the <b>ship collides with an enemy</b>, the game <b>ends</b>.</li>
+				<li> When the ship is hit by an enemy, the game is over. </li>
+			</ul>
+		</li>
+	</ul>
+	<p class="clickable" onclick="toggleDetails('pygame')"> 3️⃣ Developing the Game with Pygame </p>
+	<ul style="display:none;line-height:24pt;text-align:left;list-style-type:none;" id="pygame"> 
+		<li> ✅ Why Pygame? 
+			<ul>
+				<li> It <b>simplifies game design</b> by handling graphics, input, and game logic.</li>
+				<li> This game is coded in <b>just 100 lines of Python</b>. </li>
+				<li> We will <b>develop it step by step together</b>.</li>
+			</ul>
+		</li>
+		<li>🕹 How Pygame Works
+			<ul>
+				<li> Pygame runs a <b>game loop</b> that continuously updates the game screen.</li>
+				<li> Each cycle of this loop is called a <b>frame</b>.</li>
+				<li> We control the <b>frame rate</b> (maximum frames per second).</li>
+			</ul>
+		</li>
+		<li> 🔄 In Each Frame, We:
+			<ul>
+				<li> Check for <b>user input</b> (key presses).</li>
+				<li> Update the <b>ship’s position</b> based on input.</li>
+				<li> Move <b>enemies</b> across the screen. </li>
+				<li> Detect <b>collisions</b> between the ship and enemies.</li>
+				<li> End the game if there’s a <b>collision</b> or the user presses <b>ESC</b>.</li>
+			</ul>
+		</li>
+	</ul>	
+	<p class="clickable" onclick="toggleDetails('structure')">4️⃣ Program Structure </p>
+	<ol id="structure" style="display:none;line-height:24pt;text-align:left;">
+		<li> Import libraries </li>  
+		<li> Define variables </li>
+		<li> Initialize Pygame </li>
+		<li> Create the ship </li>
+		<li> Define functions: </li>
+			<ul>
+				<li><code>updatePlayer()</code>: Update ship position</li>
+				<li><code>createEnemy()</code>: Spawn new enemies</li>
+				<li><code>updateEnemies()</code>: Move enemies across the screen</li>
+			</ul>
+		<li> Start the <b>Game Loop</b> </li>
+			<ul>
+				<li> Each iteration = <b>one frame</b>   </li>
+				<li> Check for<b>events</b> (key presses) </li>
+				<li> Create new enemies </li>
+				<li> Set <b>background color</b> </li>
+				<li> Update <b>ship and enemies</b> </li>
+				<li> Detect <b>collisions</b> </li>
+				<li> Draw everything on the screen</li>
+				<li> Show the <b>updated frame</b> </li>
+			</ul>
+	</ol>
 </div>
 
 <script type="text/javascript">
