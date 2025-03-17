@@ -25,13 +25,13 @@
 
 
 <p>&nbsp;</p>
-<p ><b>Step 1.</b> Open a new python file or project</p>
+<h3><b>Step 1.</b> Open a new python file or project</h3>
 
 
 
 
 <p>&nbsp;</p>
-<p><b>Step 2.</b> Import pygame and other items</p>
+<h3><b>Step 2.</b> Import pygame and other items</h3>
 <p>We install &quot;pygame&quot; if it is missing.</p>
 <pre><code>
 try:
@@ -55,7 +55,7 @@ from pygame.locals import ( # import Arrow Keys and ESC
 
 
 <p>&nbsp;</p>
-<p><b>Step 3.</b> Initiate the game screen</p>
+<h3><b>Step 3.</b> Initiate the game screen</h3>
 <p>Define the screen width and height</p><pre><code>
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 320
@@ -70,7 +70,7 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT]) # define the mai
 
 
 <p>&nbsp;</p>
-<p><b>Step 4.</b> Game loop</p>
+<h3><b>Step 4.</b> Game loop</h3>
 <p>FPS (Frame per second): The number of frames shown in one second. <em>E.g., TV shows/movies -&gt; 24fps, live broadcast -&gt; 30 fps, video games -&gt; 30-120 fps.</em></p>
 <p>We prepare each frame and then it is shown on the screen. </p>
 <p>We use an infinite loop, but we can adjust FPS for our game.</p>
@@ -96,7 +96,7 @@ while running:
 
 
 <p>&nbsp;</p>
-<p><b>Step 5:</b> Define the ship as an Sprite object</p>
+<h3><b>Step 5:</b> Define the ship as an Sprite object</h3>
 <pre><code>
 ship = pygame.sprite.Sprite()
 ship.surf = pygame.Surface((60, 20)) # create a surface
@@ -107,7 +107,7 @@ ship.rect = ship.surf.get_rect() # create a variable to access the surface as a 
 
 
 <p>&nbsp;</p>
-<p><b>Step 6:</b> Show the player on the screen</p>
+<h3><b>Step 6:</b> Show the player on the screen</h3>
 <p>We use "blit()" method of "screen": 
 Block transfer, "blit(surface, position or rectangle)", the position of rectange is used when a rectange is provided</p>
 <p>Place this code in the game-loop, just before "pygame.display.flip()":
@@ -120,7 +120,7 @@ Block transfer, "blit(surface, position or rectangle)", the position of rectange
 
 
 <p>&nbsp;</p>
-<p><b>Step 7:</b> Update the player position with arrows</p>
+<h3><b>Step 7:</b> Update the player position with arrows</h3>
 <p>We can directly access all pressed keys by "pygame.key.get_pressed()".</p>
 <p>We define a function "updateShip(presses_keys)" class taking "pressed_keys" as the input.</p>
 <pre><code>
@@ -161,7 +161,7 @@ The ship should move within the screen amd should not be off screen.
 
 
 <p>&nbsp;</p>
-<p><b>Step 8:</b> Creating enemies in certain intervals</p>
+<h3><b>Step 8:</b> Creating enemies in certain intervals</h3>
 <p>We define a certain time interval to create each enemy randomly on the right side of the screen.</p>
 <p>For this purpose, we will create a new EVENT not in the system and call it in every 250 miliseconds. </p>
 <pre><code>
@@ -192,7 +192,7 @@ while running:
 
 
 <p>&nbsp;</p>
-<p><b>Step 9.</b> Define a function for creating a new enemy</p>
+<h3><b>Step 9.</b> Define a function for creating a new enemy</h3>
 <p>Enemies and our photonic ship are basically the same, but their sizes and moves are defined differently.</p>
 
 <p>First, we create groups for enemies and all sprites.</p>
@@ -220,7 +220,7 @@ def createEnemy():
 
 
 <p>&nbsp;</p>
-<p><b>Step 10.</b> Define a function to update all enemies</p>
+<h3><b>Step 10.</b> Define a function to update all enemies</h3>
 <pre><code>
 def updateEnemies():
     for enemy in enemies:
@@ -233,7 +233,7 @@ def updateEnemies():
 
 
 <p>&nbsp;</p>
-<p><b>Step 11.</b> Creating, updating, and displaying enemies</p>
+<h3><b>Step 11.</b> Creating, updating, and displaying enemies</h3>
 
 REPLACE
 
@@ -284,7 +284,7 @@ while running:
 
 
 <p>&nbsp;</p>
-<p><b>Step 12.</b> Collision detection</p>
+<h3><b>Step 12.</b> Collision detection</h3>
 <p>Thanks to Sprite and Sprite groups. We can detect if any enemy hits our photonic ship by using a single line of code.</p>
 <pre><code>
     if pygame.sprite.spritecollideany(ship, enemies):  # check if "ship" is hit by any enemy in the "enemies" group
@@ -339,6 +339,46 @@ there_is_message = False
     pygame.time.Clock().tick(30)  # maximum number of frames per second <- set the FPS rate
 </code></pre>
 
+<p>&nbsp;</p>
+<hr>
+
+<p>&nbsp;</p>
+<h2>Tasks</h2>
+
+<p>&nbsp;</p>
+<p>Use the following tasks to practice and deepen your understanding of game design and Pygame features.</p>
+
+<p>&nbsp;</p>
+<h3>Task 1. Adding a Score to the Game</h3>
+<p>Add a score to the game and display it in the top-right or top-left corner.</p>
+<p>A simple method: The player earns 1 point for every frame they survive.</p>
+<p>The score can also increase based on elapsed time.</p>
+
+<p>&nbsp;</p>
+<h3>Task 2. Adding a Shooting Mechanism</h3>
+<p> Our spaceship can fire bullets, and enemies hit by the bullets will be removed from the game. </p>
+<p> Press the <b>space</b> key to shoot. </p>
+
+<p>&nbsp;</p>
+<h3>Task 3. Freezing Enemies Temporarily</h3>
+<p> When the <b>F</b> key is pressed, all enemies will pause for a certain duration while the player can still move their spaceship./p>
+<p>This duration can be <b>1 or 2 seconds</b> (equivalent to <b>30 or 60 frames</b>).</p>
+
+<p>&nbsp;</p>
+<h3>Task 4. Random Teleportation</h3>
+<p>Pressing the <b>R</b> key teleports the player's ship to a random location, ensuring it does not land on an enemy.</p>
+
+
+
+<p>&nbsp;</p>
+<h2>Additional Features</h2>
+
+<p>If you have extra time, consider adding more features from the list below or come up with your own creative ideas:</p>
+<ul>
+	<li>Add levels: As the levels progress, enemies move faster.</li>
+	<li>Limit firing power: For example, allow only six bullets at a time, with depleted bullets refilling at intervals.</li>
+	<li>Guided enemies: Some enemies can track the player's ship, moving up or down toward it.</li>
+</ul>
 
 
 <p style="height:120px;">&nbsp;</p>
