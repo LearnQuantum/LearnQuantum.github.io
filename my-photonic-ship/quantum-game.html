@@ -70,37 +70,37 @@
  <p> 
 	• When pressing key "X", our ship should switch its screen (in the same position).
 	<br><font class="space"></font>
+	• When in the upper screen, the state of our ship is "|0>".
+	<br><font class="space"></font>
+	• When in the lower screen, the state of our ship is "|1>".
+	<br><font class="space"></font>
 	• Make sure that our ship cannot cross the middle line.
 </p> 
  <center><a href="games/photonic-ship-task2.html" target="_blank">Try Task 2 Game Version </a></center>
 </div>
 <br>
 <div class="hint">
-💡 The following properties can be read and set:
- <br>
- <code> ship.rect.left <br> ship.rect.top </code>
-</div>
-<br>
-<div class="hint">
 💡 Similar to importing "K_UP, K_DOWN, K_LEFT,...", we can import and use "K_x".
 </div>
 
+<br>
+<div class="hint">
+💡 Define a variable <code>state</code>, and update it whenever the state is changed.
+</div>
+<br>
+<div class="hint">
+💡 The following properties can be read and set:
+ <br>
+ <code> ship.rect.top <br> ship.rect.bottom </code>
+</div>
 
 <br>
 <h2>Task 3 "Display state"</h2>
 <div class="left-container">
  <p> 
-	• When in the upper screen, the state of our ship is "|0>".
-	<br><font class="space"></font>
-	• When in the lower screen, the state of our ship is "|1>".
-	<br><font class="space"></font>
 	• Display the state information on the top-right corner.
 </p> 
  <center><a href="games/photonic-ship-task3.html" target="_blank">Try Task 3 Game Version </a></center>
-</div>
-<br>
-<div class="hint">
-💡 Define a variable <code>state</code>, and update it whenever the state is changed.
 </div>
 <br>
 <div class="hint">
@@ -154,7 +154,7 @@
 </div>
 <br>
 <div class="hint">
-💡 Each enemy has <code> enemy.rect.top </code> for its vertical (y) position. Check the code for updating the ship.
+💡 Each enemy has <code> enemy.rect.top </code> for its vertical (y) position. Check the code for updating the enemy.
 </div>
 
 
